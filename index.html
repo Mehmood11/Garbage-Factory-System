@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Project Map</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.3.1/mdb.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
+  </head>
+  <body>
+    <div class="wrapper">
+      <!-- Sidebar -->
+      <aside id="sidebar">
+        <div class="h-100 position-fixed" style="min-width: 17.4%">
+          <div class="sidebar-logo">
+            <img src="./icons/logo.svg" style="height: 50px; width: 60px;"/>
+          </div>
+
+          <!-- Sidebar Navigation -->
+          <ul class="sidebar-nav">
+            <li class="sidebar-header">Toools and component</li>
+            <li class="sidebar-item active">
+              <a href="#" class="sidebar-link d-flex justify-content-start">
+                <ion-icon
+                  name="grid-outline"
+                  class="gridIcon"
+                  style="color: #F39324; font-size: 25px; margin-right: 10px"
+                ></ion-icon>
+                Dashabord
+              </a>
+            </li>
+            <li class="sidebar-item">
+              <a
+                href="#"
+                class="sidebar-link collapsed d-flex justify-content-start"
+                data-bs-toggle="collapse"
+                data-bs-target="#pages"
+                aria-expanded="false"
+                aria-controls="pages"
+              >
+                <ion-icon
+                  name="layers-outline"
+                  class="gridIcon"
+                  style="color: #F39324; font-size: 25px; margin-right: 10px"
+                ></ion-icon>
+                Pages
+              </a>
+              <ul
+                id="pages"
+                class="sidebar-dropdown list-unstyled collapse"
+                data-bs-parent="#sidebar"
+              >
+                <li class="sidebar-item">
+                  <a href="#" class="sidebar-link"> Analytics </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- Main Component -->
+      <div class="main">
+        <nav
+          class="navbar navbar-expand px-3 border-bottom d-flex justify-content-between"
+        >
+          <!-- Button for Sidebar -->
+          <button class="btn text-black" type="button" data-bs-theme="dark">
+            <img src="./icons/menu.svg" />
+          </button>
+          <div class="input_profile">
+            <input type="text" placeholder="search" />
+            <div class="profile">
+              <img src="./icons/profile.svg" />
+            </div>
+          </div>
+        </nav>
+
+        <main class="content px-3 py-2 mt-3">
+          <div class="container-fluid">
+            <div class="row">
+              <h1 style="color: #F39324">Garbage Factory System</h1>
+              <div class="col-12 mt-2">
+                <label for="startTime">Start Time:</label>
+                <input type="time" id="startTime" name="startTime" />
+                <label for="endTime">End Time:</label>
+                <input type="time" id="endTime" name="endTime" />
+                <button
+                  onclick="filterChartData()"
+                  id="filterButton"
+                  disabled="true"
+                  class="disabled"
+                >
+                  Search
+                </button>
+              </div>
+            </div>
+            <div class="container-fluid mt-4 g-0">
+              <div class="row p-0">
+                <div
+                  class="col-xl-9 d-flex justify-content-start align-items-start py-4 flex-xl-wrap"
+                >
+                  <div
+                    class="top-content d-flex  justify-content-center border rounded-2 py-4 flex-wrap w-100"
+                    style="background-color: #fec37f2a"
+                  >
+                    <canvas id="chartBuilding" class="w-25 h-25"></canvas>
+                    <canvas id="chartTrimmings"  class="w-25 h-25"></canvas>
+                    <canvas id="chartHouseholds"  class="w-25 h-25"></canvas>
+                  </div>
+                </div>
+                <div
+                  class="col-xl-3 d-flex justify-content-around align-items-center mt-lg-0 mt-4"
+                >
+                  <div
+                    class="row top-content d-flex border rounded-2 py-5 w-100"
+                    
+                  >
+                    <div class="col-lg-6 totalTrucks">
+                      <h4 class="counter" id="truckNumbers"></h4>
+                      <h5>Trucks</h5>
+                      <img src="./icons/TruckIcon.svg" />
+                    </div>
+                    <div class="col-lg-6 totalGarbageTons">
+                      <h4 class="counter" id="garbageTons" ></h3>
+                      <h5>Garbaged</h5>
+                      <img src="./icons/garbage.svg" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row gy-2 mt-3">
+                <h1 style="color: #F39324">Destination Facility</h1>
+                <div class="row justify-content-center" id="destinationFacilityDataContainer"></div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Counter-Up/1.0.0/jquery.counterup.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
