@@ -1,15 +1,30 @@
-const toggler = document.querySelector(".btn");
+const currentday = document.getElementById("currentday");
+const currentdate = document.getElementById("currentdate");
+const currentTime = document.getElementById("currentTime");
 
-toggler.addEventListener("click", function () {
-  document.querySelector("#sidebar").classList.toggle("collapsed");
-  document.querySelector("#sidebar").classList.remove("hide_sidebar");
-});
+// Function to update the date and time
+function updateDateTime() {
+  const currentDate = new Date();
+  const month = currentDate.getMonth() + 1;
+  const day = currentDate.getDate();
+  const hours = currentDate.getHours();
+  const minutes = currentDate.getMinutes();
 
-const viewPortWidth = window.innerWidth;
+  // Update the date and time in the DOM
+  document.getElementById("currentdate").innerHTML = `${month}.${day}`;
+  document.getElementById("currentTime").innerHTML = `${hours}:${minutes}`;
 
-if (viewPortWidth <= 980) {
-  document.querySelector("#sidebar").classList.add("hide_sidebar");
+  const dayOfWeekIndex = currentDate.getDay();
+  const daysOfWeek = ["Sun", "Mon", "Tues", "Wed", "Thur", "Fri", "Sat"];
+  const dayOfWeekString = daysOfWeek[dayOfWeekIndex];
+  document.getElementById("currentday").innerHTML = dayOfWeekString;
 }
+
+// Call the updateDateTime() function initially to set the time on page load
+updateDateTime();
+
+// Call the updateDateTime() function every second (1000 milliseconds) to update the time continuously
+setInterval(updateDateTime, 1000);
 
 //---------------- Main Script for Charts ----------------------
 let SHEET_ID = "1CwrWdik8Q7Rg0eIjIoCLwom5dgdGNWFxtou0npbbFYw";
@@ -38,7 +53,7 @@ let garbageCounterdataa = [];
 let myChart1 = null; // Variable to store the Chart instance
 let myChart2 = null; // Variable to store the Chart instance
 let myChart3 = null; // Variable to store the Chart instance
-
+let truckCounter = null;
 document.addEventListener("DOMContentLoaded", fetchData);
 // document.addEventListener("DOMContentLoaded", destinationFacilityAPIFunction);
 
@@ -102,11 +117,11 @@ function displayBuildingsChart(data, canvasId) {
       }, "");
 
       const textX = width / 2;
-      const textY = height / 2 + fontSize / 2 + 20; // Adjust the position as needed
+      const textY = height / 2 + fontSize / 2; // Adjust the position as needed
 
       ctx.save();
       ctx.font = `bolder ${fontSize}px Arial`;
-      ctx.fillStyle = "#444";
+      ctx.fillStyle = "#f49324";
       ctx.textAlign = "center";
       ctx.fillText(valueText, textX, textY + fontSize); // Adjust the
       ctx.fillText(buildingText, textX, textY);
@@ -125,6 +140,9 @@ function displayBuildingsChart(data, canvasId) {
         tooltip: {
           enabled: false, // Disable the tooltip on hover
         },
+        legend: {
+          display: false
+        }
       },
     },
     data: {
@@ -133,7 +151,7 @@ function displayBuildingsChart(data, canvasId) {
         {
           label: "Data",
           data: chartData,
-          backgroundColor: ["rgb(255, 99, 132)", "rgba(128,128,128, 0.25)"],
+          backgroundColor: ["#F49324", "#DCDCDC"],
           borderWidth: 0,
         },
       ],
@@ -192,11 +210,11 @@ function displayTrimmingChart(data, canvasId) {
       }, "");
 
       const textX = width / 2;
-      const textY = height / 2 + fontSize / 2 + 20; // Adjust the position as needed
+      const textY = height / 2 + fontSize / 2; // Adjust the position as needed
 
       ctx.save();
       ctx.font = `bolder ${fontSize}px Arial`;
-      ctx.fillStyle = "#444";
+      ctx.fillStyle = "##73572e";
       ctx.textAlign = "center";
       ctx.fillText(valueText, textX, textY + fontSize); // Adjust the
       ctx.fillText(buildingText, textX, textY);
@@ -215,6 +233,9 @@ function displayTrimmingChart(data, canvasId) {
         tooltip: {
           enabled: false, // Disable the tooltip on hover
         },
+        legend: {
+          display: false
+        }
       },
     },
     data: {
@@ -223,7 +244,7 @@ function displayTrimmingChart(data, canvasId) {
         {
           label: "Data",
           data: chartData,
-          backgroundColor: ["rgb(255, 206, 86)", "rgba(128,128,128, 0.25)"],
+          backgroundColor: ["#73572E", "#DCDCDC"],
           borderWidth: 0,
         },
       ],
@@ -283,11 +304,11 @@ function displayHouseholdingChart(data, canvasId) {
       }, "");
 
       const textX = width / 2;
-      const textY = height / 2 + fontSize / 2 + 20; // Adjust the position as needed
+      const textY = height / 2 + fontSize / 2; // Adjust the position as needed
 
       ctx.save();
       ctx.font = `bolder ${fontSize}px Arial`;
-      ctx.fillStyle = "#444";
+      ctx.fillStyle = "#b9bd76";
       ctx.textAlign = "center";
       ctx.fillText(valueText, textX, textY + fontSize); // Display percentage
       ctx.fillText(buildingText, textX, textY);
@@ -306,6 +327,9 @@ function displayHouseholdingChart(data, canvasId) {
         tooltip: {
           enabled: false, // Disable the tooltip on hover
         },
+        legend: {
+          display: false
+        }
       },
     },
     data: {
@@ -314,7 +338,7 @@ function displayHouseholdingChart(data, canvasId) {
         {
           label: "Data",
           data: chartData,
-          backgroundColor: ["rgb(54, 162, 235)", "	rgba(128,128,128, 0.25)"],
+          backgroundColor: ["#B9BD76", "#DCDCDC"],
           borderWidth: 0,
         },
       ],
@@ -326,14 +350,7 @@ function displayHouseholdingChart(data, canvasId) {
 // ------------------ Destination Facility Function ------------------------
 function destinationFacilityFunction(dataaaaaaaaa) {
   console.log(dataaaaaaaaa);
-  // Check if data is empty
-  if (!dataaaaaaaaa || dataaaaaaaaa.length === 0) {
-    const destinationFacilityDataContainer = document.getElementById(
-      "destinationFacilityDataContainer"
-    );
-    destinationFacilityDataContainer.innerHTML = "<p>No Data Found</p>";
-    return;
-  }
+
   const labels = dataaaaaaaaa?.map((row) => row.c[2]?.v);
   const values = dataaaaaaaaa?.map((row) => row.c[1]?.v);
 
@@ -344,50 +361,69 @@ function destinationFacilityFunction(dataaaaaaaaa) {
   }, {});
 
   // Extract the unique labels and summed values
-  const uniqueLabels = Object.keys(sumByLabel);
-  const summedValues = Object.values(sumByLabel);
 
-  const labelSets = new Set(uniqueLabels);
-  const arrayOfLabels = Array.from(labelSets);
-
-  const valueSets = new Set(summedValues);
-  const arrayOfValues = Array.from(valueSets);
-
-  let destinationFacilityArray = [];
-  let bgcolors = [
-    "rgba(54, 162, 235, 0.2)",
-    "rgba(4, 62, 235, 0.2)",
-    "rgba(255, 99, 132, 0.2)",
-    "rgba(255, 9, 32, 0.2)",
-    "rgba(255, 99, 1, 0.2)",
+  const arrayD = [
+    {
+      id: `Trim plant`,
+      name: "Trimming",
+      subName: "Factory",
+      icon: "./icons/trimming.svg",
+    },
+    {
+      id: `Construction waste plant`,
+      name: "Construction",
+      subName: "waste plant",
+      icon: "./icons/buildingWaste.svg",
+    },
+    {
+      id: `"Mafridan" Seperator`,
+      name: `"Mafridan"`,
+      subName: "Seperator",
+      icon: "./icons/mafridan.svg",
+    },
+    {
+      id: "Arrow-Bio Ecology",
+      name: "Ecological",
+      subName: "Factory",
+      icon: "./icons/ecology.svg",
+    },
+    {
+      id: `RDF`,
+      name: "RDF",
+      subName: "",
+      icon: "./icons/RDF.svg",
+    },
   ];
-  const icons = [
-    "./icons/ecology.svg",
-    "./icons/mafridan.svg",
-    "./icons/buildingWaste.svg",
-    "./icons/trimming.svg",
-    "./icons/RDF.svg",
-  ];
-  for (let i = 0; i < arrayOfLabels.length; i++) {
-    let obj = {
-      name: arrayOfLabels[i],
-      value: arrayOfValues[i],
-      bgColor: bgcolors[i],
-      icon: icons[i],
-    };
-    destinationFacilityArray.push(obj);
-  }
+
+  // for (let i = 0; i < arrayD.length; i++) {
+  //   console.log(sumByLabel?.[arrayD[i].id] ?? 0);
+  //   let obj = {
+  //     name: arrayD[i].name,
+  //     subName: arrayD[i].subName,
+  //     ...(false ? { value: sumByLabel?.[arrayD[i].id] } : { value: "0" }),
+  //     icon: arrayD[i].icon,
+  //   };
+  //   destinationFacilityArray.push(obj);
+  // }
+  const destinationFacilityArray = arrayD.map((x) => ({
+    name: x.name,
+    subName: x.subName,
+    ...(!!sumByLabel?.[x.id] ? { value: sumByLabel?.[x.id] } : { value: 0 }),
+    icon: x.icon,
+  }));
 
   let destinationContent = destinationFacilityArray
-    ?.map((item) => {
+    ?.map((item, i) => {
       return `
-      <div class="col-sm-12 col-md-6 col-lg-4 mt-3">
+      <div class="main-destination mt-3">
       <div
-        class="p-3 border top-content d-flex flex-column justify-content-center align-items-center"
+        class="d-flex flex-column justify-content-center align-items-center"
       >
-      <img src=${item.icon} alt="goal" style='height: 100px; width: 150px'/>
-        <h3>${item.name}</h3>
-        <h2 class='destinationFacCol' style='color: #F39324' data-val=${item.value}>${item.value}</h2>
+      <img src=${item.icon} alt="goal" style='height: 80px; width: 150px'/>
+        <h5>${item.name}</h5>
+        <p class='m-0' style='font-size: 15px; font-weight: 400;'>${item.subName}</p>
+        <h2 class='destinationFacCol m-0 p-0' style='color: #F39324;' data-val=${item.value}>${item.value}</h2>
+        <h6 class='m-0' style='color: #9C9F62'>Ton/טון</h6>
       </div>
     </div>
     `;
@@ -400,17 +436,17 @@ function destinationFacilityFunction(dataaaaaaaaa) {
   );
   destinationFacilityDataContainer.innerHTML = destinationContent;
   const destinationFacCols = document?.querySelectorAll(".destinationFacCol");
-  
+
   destinationFacCols?.forEach((destinationFacCol) => {
     let startValue = 0;
     let endValue = parseInt(destinationFacCol.getAttribute("data-val"));
-    let duration = Math.floor(1 / endValue);
+    let duration = Math.floor(5 / endValue);
     let counter = setInterval(() => {
-      startValue += 1;
       destinationFacCol.textContent = startValue;
       if (startValue == endValue) {
         clearInterval(counter);
       }
+      startValue += 1;
     }, duration);
   });
 }
@@ -423,21 +459,21 @@ function truckCounterFunction(truckRecordsData) {
     if (truckRecordsData.length === 0) {
       truckNumbers.innerHTML = "0";
     } else {
-      const totalTruckRecords = truckRecordsData?.reduce((acc, row) => {
-        // Assuming the truck count is in the first column (index 0)
-        const count = row.c[0]?.v || 0;
-        return acc + count;
-      }, 0);
+      // Access the last record in the array
+      const lastRecord = truckRecordsData[truckRecordsData.length - 1];
+
+      // Assuming the truck count is in the first column (index 0)
+      const totalTruckRecords = lastRecord.c[0]?.v || 0;
 
       let startValue = 0;
       let endValue = totalTruckRecords;
       let duration = Math.floor(1 / endValue);
       console.log(duration);
-      let counter = setInterval(() => {
+      truckCounter = setInterval(() => {
         startValue += 1;
         truckNumbers.textContent = startValue;
         if (startValue == endValue) {
-          clearInterval(counter);
+          clearInterval(truckCounter);
         }
       }, duration);
       truckNumbers.innerHTML = totalTruckRecords;
@@ -573,6 +609,8 @@ async function fetchData() {
 }
 
 function filterChartData() {
+  clearInterval(truckCounter);
+
   const startTimeInput = document.getElementById("startTime");
   const endTimeInput = document.getElementById("endTime");
   const startTime = startTimeInput.value;
